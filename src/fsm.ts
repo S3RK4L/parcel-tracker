@@ -39,3 +39,15 @@ const transitionMap: StateEventMapping = {
   out_for_delivery: { deliver: "delivered", fail: "failed" },
   delivered: { return: "returned", fail: "failed" },
 };
+
+function transition(
+  currentState: ParcelState,
+  event: ParcelEvent,
+): ParcelState {
+  // If transition is valid, return the next state
+  const nextState = transitionMap[currentState]?.[event];
+  if (nextState) {
+    return nextState;
+  }
+  throw new Error(`Invalid transition: ${currentState} + ${event}`);
+}
