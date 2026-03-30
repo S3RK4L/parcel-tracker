@@ -1,0 +1,17 @@
+{
+  "name": "parcel-tracker",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Kali Hinder",
+  "license": "ISC",
+  "description": "A parcel tracking system built with TypeScript using finite state machines",
+  "devDependencies": {
+    "@types/node": "^25.5.0",
+    "typescript": "^6.0.2"
+  }
+}
