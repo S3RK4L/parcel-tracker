@@ -1,5 +1,5 @@
 // A type for all possible parcel states (pending, processing, dispatched, out_for_delivery, delivered, failed, returned)
-type ParcelState =
+export type ParcelState =
   | "pending"
   | "processing"
   | "dispatched"
@@ -9,7 +9,7 @@ type ParcelState =
   | "returned"; //terminal state
 
 // A type for all possible transitions/events (think about what triggers a state change, e.g. dispatch, deliver, fail etc.)
-type ParcelEvent =
+export type ParcelEvent =
   | "request"
   | "start"
   | "dispatch"
@@ -19,20 +19,20 @@ type ParcelEvent =
   | "return";
 
 // An interface for what a parcel looks like
-interface Parcel {
+export interface Parcel {
   _id: string;
   currentState: ParcelState;
   createdAt: Date;
   lastUpdatedAt: Date;
 }
 
-type StateEventMapping = {
+export type StateEventMapping = {
   [key in ParcelState]?: {
     [event in ParcelEvent]?: ParcelState;
   };
 };
 
-const transitionMap: StateEventMapping = {
+export const transitionMap: StateEventMapping = {
   pending: { start: "processing", fail: "failed" },
   processing: { dispatch: "dispatched", fail: "failed" },
   dispatched: { delivering: "out_for_delivery", fail: "failed" },
@@ -40,7 +40,7 @@ const transitionMap: StateEventMapping = {
   delivered: { return: "returned", fail: "failed" },
 };
 
-function transition(
+export function transition(
   currentState: ParcelState,
   event: ParcelEvent,
 ): ParcelState {
@@ -52,7 +52,7 @@ function transition(
   throw new Error(`Invalid transition: ${currentState} + ${event}`);
 }
 
-function createParcel(id: string): Parcel {
+export function createParcel(id: string): Parcel {
   const newParcel: Parcel = {
     _id: id,
     currentState: "pending",
