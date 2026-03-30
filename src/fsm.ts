@@ -51,3 +51,13 @@ function transition(
   }
   throw new Error(`Invalid transition: ${currentState} + ${event}`);
 }
+
+function createParcel(id: string): Parcel {
+  const newParcel: Parcel = {
+    _id: id,
+    currentState: "pending",
+    createdAt: new Date(),
+    lastUpdatedAt: new Date(),
+  };
+  return newParcel;
+}
