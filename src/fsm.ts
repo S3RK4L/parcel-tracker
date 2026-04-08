@@ -18,10 +18,21 @@ export type ParcelEvent =
   | "fail"
   | "return";
 
+export interface Address {
+  addressLine1: string,
+    postcode: string,
+    town: string,
+    country: string
+}
+
 // An interface for what a parcel looks like
 export interface Parcel {
   _id: string;
   currentState: ParcelState;
+  paid: boolean,
+  packed: boolean,
+  targetAddress?: Address,
+  // Audit Fields
   createdAt: Date;
   lastUpdatedAt: Date;
 }
@@ -41,21 +52,32 @@ export const transitionMap: StateEventMapping = {
 };
 
 export function transition(
-  currentState: ParcelState,
+  parcel: Parcel,
   event: ParcelEvent,
 ): ParcelState {
   // If transition is valid, return the next state
-  const nextState = transitionMap[currentState]?.[event];
+  const nextState = transitionMap[parcel.currentState]?.[event];
   if (nextState) {
+      if (event === "start" && !parcel.paid) {
+        throw new Error("Parcel must be paid before processing can start");
+      }
+      if (event === "dispatch" && !parcel.packed) {
+        throw new Error("Parcel must be packed before it can be dispatched");
+      }
+      if (event === "delivering" && !parcel.targetAddress) {
+        throw new Error("Parcel must have a delivery address before going out for delivery");
+      }
     return nextState;
   }
-  throw new Error(`Invalid transition: ${currentState} + ${event}`);
+  throw new Error(`Invalid transition: ${parcel.currentState} + ${event}`);
 }
 
 export function createParcel(id: string): Parcel {
   const newParcel: Parcel = {
     _id: id,
     currentState: "pending",
+    paid: false,
+    packed: false,
     createdAt: new Date(),
     lastUpdatedAt: new Date(),
   };
